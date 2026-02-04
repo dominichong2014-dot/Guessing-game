@@ -1,5 +1,6 @@
 
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
 from PIL import Image
 import time 
 import random
@@ -17,6 +18,8 @@ if 'start' not in st.session_state:
     st.session_state.start = None
 if 'i' not in st.session_state:
     st.session_state.i = 0
+if 'e' not in st.session_state:
+   st.session_state.e = ''
 
 
 
@@ -77,11 +80,12 @@ hard=[{'img':'.png','answer':'물곰'},
       {'img':'18.png','answer':'사올라'},
       {'img':'19.png','answer':'말레이맥'}]
 
-name={'쉬움':easy,'보통':normal,'어려움':hard}
+n={'쉬움':easy,'보통':normal,'어려움':hard}
 
 # 2. 페이지별 화면 구성
 if st.session_state.page == 'username':
     name = st.text_input("이름을 입력하세요")
+    st.session_state.e=name
     st.write(f"입력된 이름: {name}")
     if st.button("다음"):
         st.session_state.page = '난이도'
@@ -95,12 +99,13 @@ elif st.session_state.page == '난이도':
     diff=st.select_slider("난이도 를 선택 하세요", ["쉬움", "보통", "어려움"])
     if st.button("다음"):
         st.session_state.diff = diff
-        st.session_state.q=random.choice(name[st.session_state.diff])
+        st.session_state.q=random.choice(n[st.session_state.diff])
         st.session_state.page = '게임'
         st.session_state.start = time.time()
         st.rerun()
 
 elif st.session_state.page == '게임':
+    st.write('안녕하세요 {}님'.format(st.session_state.e))
     limit_time = 20
     st.write(st.session_state.i)
     elapsed_time = time.time() - st.session_state.start
@@ -110,13 +115,13 @@ elif st.session_state.page == '게임':
         st.rerun()
     st.write(remaning_time)
     image = Image.open(st.session_state.q['img'])
-    name = st.text_input("이름을 입력하세요")
+    n = st.text_input("이름을 입력하세요")
     st.image(image, caption="마춰보세요")
 
     if st.button("다음"):
         st.session_state.start = time.time()
         st.session_state.i+=1
-        if  name == st.session_state.q['answer']:
+        if  n == st.session_state.q['answer']:
             st.session_state.page = '답 스크린'
             st.rerun()
         else:
@@ -132,13 +137,13 @@ elif st.session_state.page == '게임 오버':
     st.write(st.session_state.i)
     st.title("게임 오버")
     if st.button("홈화면"):
-        st.session_state.page = '타이털 스크린'
+        st.session_state.page = '난이도'
         st.rerun()
 
 elif st.session_state.page == '답 스크린':
     st.title(st.session_state.q['answer'])
     if st.button("다음"):
         st.session_state.page = '게임'
-        st.session_state.q=random.choice(name[st.session_state.diff])
+        st.session_state.q=random.choice(n[st.session_state.diff])
         st.session_state.start = time.time()
         st.rerun()

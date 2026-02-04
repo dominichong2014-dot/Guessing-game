@@ -5,10 +5,6 @@ from PIL import Image
 import time 
 import random
 
-conn = st.connection("gsheets", type=GSheetsConnection)
-url = "https://docs.google.com/spreadsheets/d/1BnCc6-q2e3sVtvv4olzPYpn3CZG1tyEBte0Xg9zPwtY/edit"
-df=conn.read(spreadsheet=url).values.tolist()
-
 # 1. 세션 상태 초기화
 if 'page' not in st.session_state:
     st.session_state.page = 'username'
@@ -89,23 +85,11 @@ if st.session_state.page == 'username':
     name = st.text_input("이름을 입력하세요")
     st.write(f"입력된 이름: {name}")
     if st.button("다음"):
-        df.append([name,0])
-        q=conn.update(data=df)
-        st.session_state.page = '타이털 스크린'
+        st.session_state.page = '난이도'
         st.rerun()
 
-elif st.session_state.page == '타이털 스크린':
-    col1, col2= st.columns([2, 2])
 
-    with col1:
-        if st.button("플레이"):
-            st.session_state.page = '난이도'
-            st.rerun() 
 
-    with col2:
-        if st.button("리더보드"):
-            st.session_state.page = ''
-            st.rerun() 
 
 
 elif st.session_state.page == '난이도':
@@ -125,10 +109,6 @@ elif st.session_state.page == '게임':
     if remaning_time <= 0:
         st.session_state.page = "게임 오버"
         st.rerun()
-
-    # st.title("게임")
-    # st.subheader("남은시간={}".format(remaning_time))
-    # st.write("뭔지 마춰보세요")
     st.write(remaning_time)
     image = Image.open(st.session_state.q['img'])
     name = st.text_input("이름을 입력하세요")

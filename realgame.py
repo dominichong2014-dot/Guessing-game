@@ -135,9 +135,10 @@ elif st.session_state.page == '게임':
 elif st.session_state.page == '게임 오버':
     st.write(st.session_state.i)
     st.session_state.i=0
+   
     st.title("게임 오버")
-    if st.button("홈화면"):
-        st.session_state.page = '난이도'
+    if st.button("다시 하기"):
+        st.session_state.page = 'username'
         st.rerun()
 
 elif st.session_state.page == '답 스크린':

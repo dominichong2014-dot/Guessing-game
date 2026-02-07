@@ -19,6 +19,8 @@ if 'i' not in st.session_state:
     st.session_state.i = 0
 if 'e' not in st.session_state:
    st.session_state.e = ''
+if 'w' not in st.session_state:
+   st.session_state.w = ''
 
 
 
@@ -114,6 +116,7 @@ elif st.session_state.page == '게임':
         st.rerun()
     st.write(remaning_time)
     image = Image.open(st.session_state.q['img'])
+    st.session_state.w = st.session_state.q
     n = st.text_input("이름을 입력하세요")
     st.image(image, caption="마춰보세요")
 
@@ -135,6 +138,7 @@ elif st.session_state.page == '게임':
 elif st.session_state.page == '게임 오버':
     st.write(st.session_state.i)
     st.session_state.i=0
+    st.write('답은={}'.format(st.session_state.w))
    
     st.title("게임 오버")
     if st.button("다시 하기"):
